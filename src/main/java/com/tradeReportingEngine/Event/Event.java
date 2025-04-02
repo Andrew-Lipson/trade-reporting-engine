@@ -1,15 +1,16 @@
-package com.tradeReportingEngine;
+package com.tradeReportingEngine.Event;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@Getter
 public class Event {
 
     @Id
@@ -17,6 +18,6 @@ public class Event {
     private Long id;
     private String buyerParty;
     private String sellerParty;
-    private double premium_amount;
-    private String premium_currency;
+    private double premiumAmount;
+    private String premiumCurrency;
 }

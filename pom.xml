@@ -37,6 +37,17 @@
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230618</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>  <!-- Check for the latest version -->
+            <scope>provided</scope>
+        </dependency>
 
         <!-- tag::actuator[] -->
         <dependency>

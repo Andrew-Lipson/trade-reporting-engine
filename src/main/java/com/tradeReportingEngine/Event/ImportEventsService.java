@@ -1,4 +1,4 @@
-package com.tradeReportingEngine;
+package com.tradeReportingEngine.Event;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,28 +18,30 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static com.tradeReportingEngine.Event.XPathConstants.*;
+
 @Service
 public class ImportEventsService {
-
-    private static final String BUYER_PARTY_EXPRESSION = "//buyerPartyReference/@href";
-    private static final String SELLER_PARTY_EXPRESSION = "//sellerPartyReference/@href";
-    private static final String PREMIUM_AMOUNT_EXPRESSION = "//paymentAmount/amount";
-    private static final String PREMIUM_CURRENCY_EXPRESSION = "//paymentAmount/currency";
 
     @Autowired
     EventRepository eventRepository;
 
-    @SneakyThrows
+
     @EventListener
     public void setUp(ContextRefreshedEvent event) {
+        importEvents();
+    }
+
+    @SneakyThrows
+    private void importEvents() {
         // Get folder path from resources
         ClassLoader classLoader = ImportEventsService.class.getClassLoader();
         Path folderPath = Paths.get(Objects.requireNonNull(classLoader.getResource("eventXML")).toURI());
 
         // Iterate through each file in the folder
         Stream<Path> paths = Files.list(folderPath);
-            paths.filter(Files::isRegularFile) // Only select files, not directories
-                    .forEach(this::processXMLFile); // Process each file
+        paths.filter(Files::isRegularFile) // Only select files, not directories
+                .forEach(this::processXMLFile); // Process each file
     }
 
     @SneakyThrows
@@ -56,12 +58,11 @@ public class ImportEventsService {
         Event event = Event.builder()
                 .buyerParty(get(xpath,doc,BUYER_PARTY_EXPRESSION))
                 .sellerParty(get(xpath,doc,SELLER_PARTY_EXPRESSION))
-                .premium_amount(Double.parseDouble(get(xpath,doc,PREMIUM_AMOUNT_EXPRESSION)))
-                .premium_currency(get(xpath,doc,PREMIUM_CURRENCY_EXPRESSION))
+                .premiumAmount(Double.parseDouble(get(xpath,doc,PREMIUM_AMOUNT_EXPRESSION)))
+                .premiumCurrency(get(xpath,doc,PREMIUM_CURRENCY_EXPRESSION))
                 .build();
 
         eventRepository.save(event);
-
     }
 
     @SneakyThrows
