@@ -1,9 +1,9 @@
-package com.tradeReportingEngine.Event;
+package com.tradeReportingEngine.Import;
 
+import com.tradeReportingEngine.Event.Event;
+import com.tradeReportingEngine.Event.EventRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.tradeReportingEngine.Event.XPathConstants.*;
+import static com.tradeReportingEngine.Import.XPathConstants.*;
 
 @Service
 public class ImportEventsService {
@@ -26,14 +26,9 @@ public class ImportEventsService {
     @Autowired
     EventRepository eventRepository;
 
-
-    @EventListener
-    public void setUp(ContextRefreshedEvent event) {
-        importEvents();
-    }
-
     @SneakyThrows
-    private void importEvents() {
+    public void importEvents() {
+
         // Get folder path from resources
         ClassLoader classLoader = ImportEventsService.class.getClassLoader();
         Path folderPath = Paths.get(Objects.requireNonNull(classLoader.getResource("eventXML")).toURI());
